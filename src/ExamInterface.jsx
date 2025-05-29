@@ -5,11 +5,12 @@ import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { useNavigate } from 'react-router-dom';
 
-const navigate = useNavigate();
+
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const ExamInterface = ({ examId, onComplete }) => {
+    const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [questions, setQuestions] = useState([]);
