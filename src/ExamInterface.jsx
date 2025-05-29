@@ -3,6 +3,9 @@ import axios from 'axios';
 import './ExamInterface.css';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { useNavigate } from 'react-router-dom';
+
+const navigate = useNavigate();
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -211,9 +214,9 @@ const ExamInterface = ({ examId, onComplete }) => {
           ))}
         </div>
 
-        <div style={{ textAlign: 'center', marginTop: '40px' }}>
-          <button className="btn-previous" onClick={() => window.location.href = '/student-dashboard'}>Go to Dashboard</button>
-        </div>
+        <button className="btn-previous" onClick={() => navigate('/student-dashboard')}>
+            Go to Dashboard
+        </button>
       </div>
     );
   }
