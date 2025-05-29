@@ -216,8 +216,8 @@ const ExamInterface = ({ examId, onComplete }) => {
         </div>
 
         <button className="btn-previous" onClick={() => navigate('/student-dashboard')}>
-            Go to Dashboard
-        </button>
+  Go to Dashboard
+</button>
       </div>
     );
   }
