@@ -144,11 +144,12 @@ const StudentDashboard = () => {
       <h2 className="dashboard-heading">Welcome, {studentData.name}</h2>
       <div className="dashboard-flex">
         <div className="dashboard-card">
-          <p><strong>Roll Number:</strong> {studentData.rollNo}</p>
+          <p><strong>Roll Number:</strong> {studentData.rollNumber}</p>
           <p><strong>Email:</strong> {studentData.email}</p>
           <p><strong>Branch:</strong> {studentData?.sectionId?.yearId?.departmentId?.name || 'N/A'}</p>
-          <p><strong>Academic Year:</strong> {studentData?.sectionId?.yearId?.name || 'N/A'}</p>
-          <p><strong>Section:</strong> {studentData?.sectionId?.name || 'N/A'}</p>
+<p><strong>Academic Year:</strong> {studentData?.sectionId?.yearId?.yearLabel || 'N/A'}</p>
+<p><strong>Section:</strong> {studentData?.sectionId?.sectionLabel || 'N/A'}</p>
+
           <p><strong>Average Score:</strong> {averageScore.toFixed(2)}%</p>
           <p><strong>Tests Taken:</strong> {summaryData.length}</p>
           <button className="btn-start-test" onClick={handleStartMCQTest}>Start MCQ Test</button>

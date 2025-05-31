@@ -26,31 +26,37 @@ const handleSubmit = async (e) => {
   try {
     // Step 1: Login
     const response = await axios.post('https://backend-production-6281.up.railway.app/api/login', formData);
-    const { token, message } = response.data;
+    const { token, message, student } = response.data; // ✅ extract student
 
     // Step 2: Save token
     localStorage.setItem('token', token);
     setMessage(message);
     setError('');
 
-    // Step 3: Fetch student dashboard data
-    const dashboardResponse = await axios.get('https://backend-production-6281.up.railway.app/api/student-dashboard', {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
+    // Step 3: Role-based redirection
+    if (student.role === 'admin') {
+      navigate('/admin-dashboard');
+    } else {
+      // Step 4: Fetch student dashboard data
+      const dashboardResponse = await axios.get('https://backend-production-6281.up.railway.app/api/student-dashboard', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
 
-    // Step 4: Save student ID (or other data as needed)
-    localStorage.setItem('studentId', dashboardResponse.data.studentId);
+      // Step 5: Save student ID (or other data)
+      localStorage.setItem('studentId', dashboardResponse.data.studentId);
 
-    // Step 5: Navigate to the dashboard
-    navigate('/student-dashboard');
+      // Step 6: Navigate to student dashboard
+      navigate('/student-dashboard');
+    }
 
   } catch (err) {
     setError(err.response?.data?.message || 'Login failed');
     setMessage('');
   }
 };
+
 
   return (
     <div className="page-container">
