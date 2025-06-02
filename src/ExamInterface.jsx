@@ -105,8 +105,8 @@ const ExamInterface = ({ examId, onComplete }) => {
   const handleSubmitExam = async () => {
     const now = new Date();
     const istHour = now.getHours();
-    if (istHour < 10 || istHour >= 18) {
-      alert("❌ Test submissions are only allowed between 10 AM and 6 PM IST.");
+    if (istHour < 8 || istHour >= 19) {
+      alert("❌ Test submissions are only allowed between 8 AM and 7 PM IST.");
       return;
     }
 
