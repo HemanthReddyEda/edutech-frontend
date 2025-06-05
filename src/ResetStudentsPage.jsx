@@ -24,15 +24,15 @@ const ResetStudentsPage = () => {
     fetchStudents();
   }, []);
 
-  const handleReset = async (rollNumber) => {
-    const confirm = window.confirm(`Are you sure you want to reset today's test for ${rollNumber}?`);
+  const handleReset = async (studentId) => {
+    const confirm = window.confirm(`Are you sure you want to reset today's test for this student?`);
     if (!confirm) return;
 
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
         "https://backend-production-6281.up.railway.app/api/admin/reset-test",
-        { rollNumber },
+        { studentId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       alert(response.data.message || "✅ Test reset successfully.");
@@ -43,18 +43,18 @@ const ResetStudentsPage = () => {
 
   return (
     <div className="dashboard-container" style={{ padding: '20px' }}>
-        <header className="page-header">
-  <img
-    src="https://www.careerit.co.in/wp-content/uploads/2023/05/logo-careerit.png"
-    alt="careerit-logo"
-    className="logo"
-  />
-  <div className="profile-section">
-    <div className="profile-avatar">AD</div>
-    <span className="profile-name">Admin</span>
-    <button className="logout-button" onClick={() => navigate('/')}>Logout</button>
-  </div>
-</header>
+      <header className="page-header">
+        <img
+          src="https://www.careerit.co.in/wp-content/uploads/2023/05/logo-careerit.png"
+          alt="careerit-logo"
+          className="logo"
+        />
+        <div className="profile-section">
+          <div className="profile-avatar">AD</div>
+          <span className="profile-name">Admin</span>
+          <button className="logout-button" onClick={() => navigate('/')}>Logout</button>
+        </div>
+      </header>
 
       <div style={{
         backgroundColor: '#ffffff',
@@ -136,7 +136,7 @@ const ResetStudentsPage = () => {
                       <td style={tdStyle}>{student.email}</td>
                       <td style={tdStyle}>
                         <button
-                          onClick={() => handleReset(student.rollNumber)}
+                          onClick={() => handleReset(student._id)}  // ✅ send studentId
                           style={{
                             backgroundColor: '#f57c00',
                             color: 'white',

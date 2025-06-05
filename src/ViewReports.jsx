@@ -88,7 +88,7 @@ const ViewReports = () => {
         <section style={{ background: '#fff', padding: '24px', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
           <h3 style={{ marginBottom: '20px', color: '#333' }}>🔍 Filter Reports</h3>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
-            {['department (eg. CSE)', 'year (eg. 1st Year)', 'section (eg. Section A)'].map((field) => (
+            {['department', 'year', 'section'].map((field) => (
               <input
                 key={field}
                 name={field}

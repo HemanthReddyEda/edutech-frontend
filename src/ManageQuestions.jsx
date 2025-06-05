@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const ManageQuestions = () => {
   const [questions, setQuestions] = useState([]);
+  const [companies, setCompanies] = useState([]);
   const [formData, setFormData] = useState({
     companyId: '',
     subject: '',
@@ -18,6 +19,12 @@ const ManageQuestions = () => {
   const [adminName, setAdminName] = useState('');
   const navigate = useNavigate();
 
+  useEffect(() => {
+    fetchAdminName();
+    fetchQuestions();
+    fetchCompanies();
+  }, []);
+
   const fetchQuestions = async () => {
     try {
       const response = await axios.get('https://backend-production-6281.up.railway.app/api/mcqs');
@@ -26,6 +33,20 @@ const ManageQuestions = () => {
       setError('Failed to fetch questions');
     }
   };
+
+  const fetchCompanies = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    const res = await axios.get(
+      'https://backend-production-6281.up.railway.app/api/companies',
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    setCompanies(res.data);
+  } catch (err) {
+    console.error('Failed to fetch companies');
+  }
+};
+
 
   const fetchAdminName = async () => {
     try {
@@ -42,11 +63,6 @@ const ManageQuestions = () => {
       setError('❌ Unauthorized access or failed to fetch admin data.');
     }
   };
-
-  useEffect(() => {
-    fetchAdminName();
-    fetchQuestions();
-  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -106,10 +122,8 @@ const ManageQuestions = () => {
 
   return (
     <div className="dashboard-container">
-      {/* Header with logos and logout */}
       <header className="page-header">
-    <img src="https://www.careerit.co.in/wp-content/uploads/2023/05/logo-careerit.png" alt="mru-Logo" className="logo" />
-        {/* <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdco6M6q4z__MjhtqnC3WUVzQ2hgFzk1kDDg&s" alt="excelr-Logo" className="logo" /> */}
+        <img src="https://www.careerit.co.in/wp-content/uploads/2023/05/logo-careerit.png" alt="mru-Logo" className="logo" />
         <div className="profile-section">
           <div className="profile-avatar">{initials}</div>
           <span className="profile-name">{adminName}</span>
@@ -117,113 +131,118 @@ const ManageQuestions = () => {
         </div>
       </header>
 
-      {/* Add MCQ Form */}
       <div style={{ margin: '20px auto', padding: '20px', maxWidth: '700px', border: '1px solid #ccc', borderRadius: '8px' }}>
         <h2 style={{ color: '#1976d2' }}>📋 Manage Questions</h2>
 
         <h3>Add Single MCQ</h3>
         <form
-  onSubmit={handleAddQuestion}
-  style={{
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '15px',
-    backgroundColor: '#f9f9f9',
-    padding: '25px',
-    borderRadius: '10px',
-    boxShadow: '0 0 10px rgba(0,0,0,0.1)',
-  }}
->
-  <input
-    name="companyId"
-    placeholder="Company ID"
-    onChange={handleInputChange}
-    required
-    style={{
-      padding: '10px',
-      borderRadius: '6px',
-      border: '1px solid #ccc',
-      fontSize: '1rem',
-    }}
-  />
-  <input
-    name="subject"
-    placeholder="Subject"
-    onChange={handleInputChange}
-    required
-    style={{
-      padding: '10px',
-      borderRadius: '6px',
-      border: '1px solid #ccc',
-      fontSize: '1rem',
-    }}
-  />
-  <input
-    name="question"
-    placeholder="Question"
-    onChange={handleInputChange}
-    required
-    style={{
-      padding: '10px',
-      borderRadius: '6px',
-      border: '1px solid #ccc',
-      fontSize: '1rem',
-    }}
-  />
+          onSubmit={handleAddQuestion}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '15px',
+            backgroundColor: '#f9f9f9',
+            padding: '25px',
+            borderRadius: '10px',
+            boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+          }}
+        >
+          <select
+            name="companyId"
+            value={formData.companyId}
+            onChange={handleInputChange}
+            required
+            style={{
+              padding: '10px',
+              borderRadius: '6px',
+              border: '1px solid #ccc',
+              fontSize: '1rem',
+            }}
+          >
+            <option value="">-- Select Company --</option>
+            {companies.map((company) => (
+              <option key={company._id} value={company._id}>
+                {company.name}
+              </option>
+            ))}
+          </select>
 
-  {formData.options.map((opt, i) => (
-    <input
-      key={i}
-      name={`option${i}`}
-      placeholder={`Option ${i + 1}`}
-      onChange={handleInputChange}
-      required
-      style={{
-        padding: '10px',
-        borderRadius: '6px',
-        border: '1px solid #ccc',
-        fontSize: '1rem',
-      }}
-    />
-  ))}
+          <input
+            name="subject"
+            placeholder="Subject"
+            onChange={handleInputChange}
+            required
+            style={{
+              padding: '10px',
+              borderRadius: '6px',
+              border: '1px solid #ccc',
+              fontSize: '1rem',
+            }}
+          />
+          <input
+            name="question"
+            placeholder="Question"
+            onChange={handleInputChange}
+            required
+            style={{
+              padding: '10px',
+              borderRadius: '6px',
+              border: '1px solid #ccc',
+              fontSize: '1rem',
+            }}
+          />
 
-  <input
-    type="number"
-    name="correctAnswerIndex"
-    placeholder="Correct Option Index (0-3)"
-    min="0"
-    max="3"
-    onChange={handleInputChange}
-    required
-    style={{
-      padding: '10px',
-      borderRadius: '6px',
-      border: '1px solid #ccc',
-      fontSize: '1rem',
-    }}
-  />
+          {formData.options.map((opt, i) => (
+            <input
+              key={i}
+              name={`option${i}`}
+              placeholder={`Option ${i + 1}`}
+              onChange={handleInputChange}
+              required
+              style={{
+                padding: '10px',
+                borderRadius: '6px',
+                border: '1px solid #ccc',
+                fontSize: '1rem',
+              }}
+            />
+          ))}
 
-  <button
-    type="submit"
-    style={{
-      backgroundColor: '#1976d2',
-      color: '#fff',
-      padding: '12px',
-      fontSize: '1rem',
-      border: 'none',
-      borderRadius: '6px',
-      cursor: 'pointer',
-      transition: 'background-color 0.3s ease',
-    }}
-    onMouseOver={(e) => (e.target.style.backgroundColor = '#145ea8')}
-    onMouseOut={(e) => (e.target.style.backgroundColor = '#1976d2')}
-  >
-    ➕ Add Question
-  </button>
-</form>
+          <input
+            type="number"
+            name="correctAnswerIndex"
+            placeholder="Correct Option Index (0-3)"
+            min="0"
+            max="3"
+            onChange={handleInputChange}
+            required
+            style={{
+              padding: '10px',
+              borderRadius: '6px',
+              border: '1px solid #ccc',
+              fontSize: '1rem',
+            }}
+          />
 
+          <button
+            type="submit"
+            style={{
+              backgroundColor: '#1976d2',
+              color: '#fff',
+              padding: '12px',
+              fontSize: '1rem',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              transition: 'background-color 0.3s ease',
+            }}
+            onMouseOver={(e) => (e.target.style.backgroundColor = '#145ea8')}
+            onMouseOut={(e) => (e.target.style.backgroundColor = '#1976d2')}
+          >
+            ➕ Add Question
+          </button>
+        </form>
 
-        {/* Excel Upload */}
         <h3 style={{ marginTop: '30px' }}>📂 Upload from Excel</h3>
         <form onSubmit={handleExcelUpload} style={{ display: 'flex', gap: '10px', flexDirection: 'column' }}>
           <input type="file" accept=".xlsx, .xls" onChange={(e) => setExcelFile(e.target.files[0])} required />
@@ -234,7 +253,6 @@ const ManageQuestions = () => {
         {error && <div style={{ color: 'red', marginTop: '10px' }}>{error}</div>}
       </div>
 
-      {/* MCQ Table */}
       <div style={{ margin: '20px auto', padding: '20px', maxWidth: '90%', border: '1px solid #ccc', borderRadius: '8px' }}>
         <h3>🧾 All MCQ Questions</h3>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
