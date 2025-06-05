@@ -12,7 +12,9 @@ const StudentDashboard = () => {
   const [showSummary, setShowSummary] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
   const [alreadySubmitted, setAlreadySubmitted] = useState(false);
+  const [alreadySubmittedCode, setAlreadySubmittedCode] = useState(false);
   const [showSubmissionModal, setShowSubmissionModal] = useState(false);
+  const [showCodeModal, setShowCodeModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,6 +27,7 @@ const StudentDashboard = () => {
         setStudentData(res.data);
         fetchResultSummary();
         checkTodaySubmission();
+        checkCodeSubmission();
       } catch (err) {
         setError('Failed to fetch student data. Please login again.');
       }
@@ -44,6 +47,16 @@ const StudentDashboard = () => {
       setAlreadySubmitted(submitted);
     } catch (err) {
       console.error('Failed to check submission:', err);
+    }
+  };
+
+  const checkCodeSubmission = async () => {
+    try {
+      const studentId = localStorage.getItem('studentId');
+      const res = await axios.get(`http://localhost:5000/api/code/submissions/check/${studentId}`);
+      setAlreadySubmittedCode(res.data.submitted);
+    } catch (err) {
+      console.error('Failed to check coding submission:', err);
     }
   };
 
@@ -74,6 +87,14 @@ const StudentDashboard = () => {
     }
   };
 
+  const handleStartCodingTest = () => {
+    if (alreadySubmittedCode) {
+      setShowCodeModal(true);
+    } else {
+      navigate('/coding-exam');
+    }
+  };
+
   const handleConfirmStart = () => {
     navigate('/exam');
   };
@@ -100,8 +121,7 @@ const StudentDashboard = () => {
   return (
     <div className="dashboard-container">
       <header className="page-header">
-    <img src="https://www.careerit.co.in/wp-content/uploads/2023/05/logo-careerit.png" alt="mru-Logo" className="logo" />
-        {/* <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdco6M6q4z__MjhtqnC3WUVzQ2hgFzk1kDDg&s" alt="excelr-Logo" className="logo" /> */}
+        <img src="https://www.careerit.co.in/wp-content/uploads/2023/05/logo-careerit.png" alt="mru-Logo" className="logo" />
         <div className="profile-section">
           <div className="profile-avatar">{initials}</div>
           <span className="profile-name">{studentData.name}</span>
@@ -141,19 +161,30 @@ const StudentDashboard = () => {
         </div>
       )}
 
+      {showCodeModal && (
+        <div className="instructions-overlay">
+          <div className="instructions-modal">
+            <h3>❌ Coding Test Already Submitted</h3>
+            <p>You have already submitted your coding test today.</p>
+            <div className="instructions-buttons">
+              <button onClick={() => setShowCodeModal(false)}>OK</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <h2 className="dashboard-heading">Welcome, {studentData.name}</h2>
       <div className="dashboard-flex">
         <div className="dashboard-card">
           <p><strong>Roll Number:</strong> {studentData.rollNumber}</p>
           <p><strong>Email:</strong> {studentData.email}</p>
           <p><strong>Branch:</strong> {studentData?.sectionId?.yearId?.departmentId?.name || 'N/A'}</p>
-<p><strong>Academic Year:</strong> {studentData?.sectionId?.yearId?.yearLabel || 'N/A'}</p>
-<p><strong>Section:</strong> {studentData?.sectionId?.sectionLabel || 'N/A'}</p>
-
+          <p><strong>Academic Year:</strong> {studentData?.sectionId?.yearId?.yearLabel || 'N/A'}</p>
+          <p><strong>Section:</strong> {studentData?.sectionId?.sectionLabel || 'N/A'}</p>
           <p><strong>Average Score:</strong> {averageScore.toFixed(2)}%</p>
           <p><strong>Tests Taken:</strong> {summaryData.length}</p>
           <button className="btn-start-test" onClick={handleStartMCQTest}>Start MCQ Test</button>
-          <button className="btn-start-test" disabled>Start Coding Test (Coming Soon)</button>
+          {/* <button className="btn-start-test" onClick={handleStartCodingTest}>Start Coding Test</button> */}
         </div>
         {showSummary && (
           <div className="chart-container">

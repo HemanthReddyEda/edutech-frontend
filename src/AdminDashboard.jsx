@@ -46,8 +46,7 @@ const AdminDashboard = () => {
       const token = localStorage.getItem("token");
       const response = await axios.post(
         "https://backend-production-6281.up.railway.app/api/admin/reset-test",
-        { studentId: rollNumber }, // assuming you paste studentId into prompt
-
+        { studentId: rollNumber },
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -76,85 +75,96 @@ const AdminDashboard = () => {
 
   return (
     <>
-      
-
       <div className="dashboard-container">
-  <header className="page-header">
-    <img src="https://www.careerit.co.in/wp-content/uploads/2023/05/logo-careerit.png" alt="mru-Logo" className="logo" />
-    {/* <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdco6M6q4z__MjhtqnC3WUVzQ2hgFzk1kDDg&s" alt="excelr-Logo" className="logo" /> */}
+        <header className="page-header">
+          <img src="https://www.careerit.co.in/wp-content/uploads/2023/05/logo-careerit.png" alt="mru-Logo" className="logo" />
+          <div className="profile-section">
+            <div className="profile-avatar">
+              {adminData.name ? adminData.name.split(' ').map(word => word[0]).join('').toUpperCase() : 'AD'}
+            </div>
+            <span className="profile-name">{adminData.name || 'Admin'}</span>
+            <button className="logout-button" onClick={handleLogout}>Logout</button>
+          </div>
+        </header>
 
-    <div className="profile-section">
-      <div className="profile-avatar">
-        {adminData.name ? adminData.name.split(' ').map(word => word[0]).join('').toUpperCase() : 'AD'}
+        <div style={{
+          maxWidth: '800px',
+          margin: '30px auto',
+          padding: '30px',
+          backgroundColor: '#f9f9f9',
+          borderRadius: '12px',
+          boxShadow: '0 2px 12px rgba(0,0,0,0.1)',
+        }}>
+          <h2 style={{ fontSize: '1.8rem', color: '#1976d2', marginBottom: '20px' }}>📊 Admin Dashboard</h2>
+          <div style={{ lineHeight: '1.8', fontSize: '1.1rem' }}>
+            <p><strong>Email:</strong> {adminData.email}</p>
+            <p><strong>Role:</strong> {adminData.role}</p>
+          </div>
+
+          <div style={{ marginTop: '30px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+            <button
+              onClick={() => navigate('/admin/manage-questions')}
+              style={{
+                padding: '12px',
+                backgroundColor: '#1976d2',
+                color: 'white',
+                fontSize: '1rem',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+              }}
+            >
+              📋 Manage Questions
+            </button>
+
+            <button
+              onClick={() => navigate('/admin/reports')}
+              style={{
+                padding: '12px',
+                backgroundColor: '#388e3c',
+                color: 'white',
+                fontSize: '1rem',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+              }}
+            >
+              📊 View Reports
+            </button>
+
+            {/* <button
+              onClick={() => navigate('/admin/add-coding-question')}
+              style={{
+                padding: '12px',
+                backgroundColor: '#6a1b9a',
+                color: 'white',
+                fontSize: '1rem',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+              }}
+            >
+              🧠 Add Coding Question
+            </button> */}
+
+            <button
+  onClick={() => navigate('/admin/reset-students')}
+  style={{
+    padding: '12px',
+    backgroundColor: '#f57c00',
+    color: 'white',
+    fontSize: '1rem',
+    border: 'none',
+    borderRadius: '6px',
+    cursor: 'pointer',
+  }}
+>
+  🔄 Reset Today’s Test for Students
+</button>
+
+          </div>
+        </div>
       </div>
-      <span className="profile-name">{adminData.name || 'Admin'}</span>
-      <button className="logout-button" onClick={handleLogout}>Logout</button>
-    </div>
-  </header>
-
-  <div style={{
-    maxWidth: '800px',
-    margin: '30px auto',
-    padding: '30px',
-    backgroundColor: '#f9f9f9',
-    borderRadius: '12px',
-    boxShadow: '0 2px 12px rgba(0,0,0,0.1)',
-  }}>
-    <h2 style={{ fontSize: '1.8rem', color: '#1976d2', marginBottom: '20px' }}>📊 Admin Dashboard</h2>
-    <div style={{ lineHeight: '1.8', fontSize: '1.1rem' }}>
-      <p><strong>Email:</strong> {adminData.email}</p>
-      <p><strong>Role:</strong> {adminData.role}</p>
-    </div>
-
-    <div style={{ marginTop: '30px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
-      <button
-        onClick={() => navigate('/admin/manage-questions')}
-        style={{
-          padding: '12px',
-          backgroundColor: '#1976d2',
-          color: 'white',
-          fontSize: '1rem',
-          border: 'none',
-          borderRadius: '6px',
-          cursor: 'pointer',
-        }}
-      >
-        📋 Manage Questions
-      </button>
-
-      <button
-        onClick={() => navigate('/admin/reports')}
-        style={{
-          padding: '12px',
-          backgroundColor: '#388e3c',
-          color: 'white',
-          fontSize: '1rem',
-          border: 'none',
-          borderRadius: '6px',
-          cursor: 'pointer',
-        }}
-      >
-        📊 View Reports
-      </button>
-
-      <button
-        onClick={handleResetTest}
-        style={{
-          padding: '12px',
-          backgroundColor: '#f57c00',
-          color: 'white',
-          fontSize: '1rem',
-          border: 'none',
-          borderRadius: '6px',
-          cursor: 'pointer',
-        }}
-      >
-        🔄 Reset Today’s Test for Student
-      </button>
-    </div>
-  </div>
-</div>
-
     </>
   );
 };
