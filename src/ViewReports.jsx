@@ -125,8 +125,6 @@ const ViewReports = () => {
                     <th style={thStyle}>Roll No</th>
                     <th style={thStyle}>Date</th>
                     <th style={thStyle}>Score (%)</th>
-                    <th style={thStyle}>Correct</th>
-                    <th style={thStyle}>Wrong</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -136,8 +134,6 @@ const ViewReports = () => {
                       <td style={tdStyle}>{r.rollNo}</td>
                       <td style={tdStyle}>{r.date}</td>
                       <td style={tdStyle}>{r.score}</td>
-                      <td style={tdStyle}>{r.correctAnswers}</td>
-                      <td style={tdStyle}>{r.wrongAnswers}</td>
                     </tr>
                   ))}
                 </tbody>
